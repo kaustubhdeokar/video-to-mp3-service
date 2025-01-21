@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: src-app-deployment
+  labels:
+    app: src-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: src-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 3
+  template:
+    metadata:
+      labels:
+        app: src-app
+    spec:
+      containers:
+        - name: src-app
+          image: kaustubhdeokar/fastapi-mysql-auth:src_app
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: src-app-configmap
+            - secretRef:
+                name: src-app-secret

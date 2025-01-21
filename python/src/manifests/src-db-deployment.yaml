@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: src-db-deployment
+  labels:
+    app: src-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: src-db
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: src-db
+    spec:
+      containers:
+        - name: src-db
+          image: kaustubhdeokar/fastapi-mysql-auth:src_db_1
+          ports:
+            - containerPort: 3306
+          envFrom:
+            - configMapRef:
+                name: src-db-configmap
+            - secretRef:
+                name: src-db-secret
