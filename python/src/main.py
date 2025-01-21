@@ -2,7 +2,7 @@ from database import get_db
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from sqlalchemy.orm import Session
-from database import get_db
+from database import init_db, get_db
 from database import User
 from utils import verify_password, create_access_token, get_password_hash
 from pydantic import BaseModel
@@ -10,6 +10,7 @@ from utils import get_current_user
 
 app = FastAPI()
 security = HTTPBasic()
+init_db()
 
 class UserCreate(BaseModel):
     username: str

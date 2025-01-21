@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  app:
+    build: 
+      context: .
+    depends_on:
+      - db
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: Kaustubh1
+      MYSQL_PASSWORD: Kaustubh1
+      MYSQL_DB: pymicroservice
+      MYSQL_PORT: 3306
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0-debian
+    environment:
+      MYSQL_ROOT_PASSWORD: Kaustubh1
+      MYSQL_DATABASE: pymicroservice
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 3
+
+networks:
+  app-network:
+    driver: bridge

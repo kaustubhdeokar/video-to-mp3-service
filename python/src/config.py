@@ -1,8 +1,8 @@
 # config.py
 import os
 
-MYSQL_HOST = 'localhost' # os.environ.get("MYSQL_HOST")
-MYSQL_USER = 'root' # os.environ.get("MYSQL_USER")
-MYSQL_PASSWORD = 'Kaustubh1' # os.environ.get("MYSQL_PASSWORD")
-MYSQL_DB = 'pymicroservice' # os.environ.get("MYSQL_DB")
-MYSQL_PORT = '3306' #int(os.environ.get("MYSQL_PORT"))
+MYSQL_HOST = os.environ.get("MYSQL_HOST", "db")  # Use 'db' as default since it's the service name in docker-compose
+MYSQL_USER = os.environ.get("MYSQL_USER", "root")
+MYSQL_PASSWORD = os.environ.get("MYSQL_PASSWORD", "Kaustubh1")
+MYSQL_DB = os.environ.get("MYSQL_DB", "pymicroservice")
+MYSQL_PORT = int(os.environ.get("MYSQL_PORT", 3306)) 
