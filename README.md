@@ -8,6 +8,10 @@
 Rest calls - calls.json
 
 
+rabbit mq configuration 
+- if we configure to publish the message on an empty exchange and routing key = 'x' it will be published to the queue named 'x' 
+- we can configure to have multiple consumers for the same channel if we anticipate high amount of traffic for a certain channel.
+
 Docker and kubernetes
 
 > kubernetes worker node/ data plane

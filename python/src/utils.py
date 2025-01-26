@@ -37,6 +37,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+    print('in get current user')
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         print('payload:', payload)

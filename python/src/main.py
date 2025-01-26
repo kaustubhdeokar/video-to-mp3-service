@@ -1,12 +1,13 @@
 from database import get_db
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Request
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from sqlalchemy.orm import Session
 from database import init_db, get_db
 from database import User
 from utils import verify_password, create_access_token, get_password_hash
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from utils import get_current_user
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 security = HTTPBasic()
@@ -18,8 +19,8 @@ class UserCreate(BaseModel):
 
 @app.get("/")
 def base_call():
-    return {"msg":"user successfully created"}
-
+    return {"msg":"running."}
+    
 @app.post("/register", response_model=dict)
 def register(user: UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.username == user.username).first()
@@ -45,6 +46,24 @@ def login(credentials: HTTPBasicCredentials = Depends(security), db: Session = D
         )
     return create_access_token(data={"sub": user.username})
 
-@app.get("/users/me", response_model=dict)
-def read_users_me(current_user: str = Depends(get_current_user)):
+@app.post("/validate", response_model=dict)
+def validate(current_user: str = Depends(get_current_user)):
     return {"username": current_user}
+
+
+# exception handling
+
+
+@app.exception_handler(ValidationError)
+async def validation_exception_handler(request: Request, exc: ValidationError):
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors()},
+    )
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
+    )
